@@ -8,7 +8,8 @@ import serial
 from threading import Timer
 
 class serial_interface():
-    def __init__(self):
+    def __init__(self, log_list_widget):
+        self.log_list_widget = log_list_widget
         self.sock = None
         self.buffer = [] #list of str
         self.connected = False
@@ -27,9 +28,12 @@ class serial_interface():
             if len(buf)<1:
                 break
             else:
+                self.log_list_widget.append(gui.ListItem("<<<"+buf))
                 self.buffer.append(buf)
 
     def send(self, msg, read_timeout):
+        self.buffer = []
+        self.log_list_widget.append(gui.ListItem(">>>"+msg))
         try:
             self.busy = True
             self.sock.write(msg + '\n')
@@ -47,7 +51,7 @@ class app_3d_printer_monitor(App):
 
     def idle(self):
         #idle function called every update cycle
-        pass
+        self.lbl_connection_status_value.set_text('connected' if self.printer.connected else 'disconnected')
     
     def main(self):
         self.printer = serial_interface()
@@ -460,22 +464,22 @@ class app_3d_printer_monitor(App):
         sub_container_connection.style['position'] = "static"
         sub_container_connection.style['margin'] = "0px"
         sub_container_connection.style['display'] = "flex"
-        lbl_connection_status_value = Label('disconnected')
-        lbl_connection_status_value.attributes['editor_baseclass'] = "Label"
-        lbl_connection_status_value.attributes['editor_tag_type'] = "widget"
-        lbl_connection_status_value.attributes['editor_newclass'] = "False"
-        lbl_connection_status_value.attributes['editor_constructor'] = "('disconnected')"
-        lbl_connection_status_value.attributes['class'] = "Label"
-        lbl_connection_status_value.attributes['editor_varname'] = "lbl_connection_status_value"
-        lbl_connection_status_value.style['font-weight'] = "bold"
-        lbl_connection_status_value.style['-webkit-order'] = "1933736976"
-        lbl_connection_status_value.style['top'] = "1px"
-        lbl_connection_status_value.style['position'] = "static"
-        lbl_connection_status_value.style['overflow'] = "auto"
-        lbl_connection_status_value.style['order'] = "1933736976"
-        lbl_connection_status_value.style['margin'] = "0px"
-        lbl_connection_status_value.style['display'] = "block"
-        sub_container_connection.append(lbl_connection_status_value,'lbl_connection_status_value')
+        self.lbl_connection_status_value = Label('disconnected')
+        self.lbl_connection_status_value.attributes['editor_baseclass'] = "Label"
+        self.lbl_connection_status_value.attributes['editor_tag_type'] = "widget"
+        self.lbl_connection_status_value.attributes['editor_newclass'] = "False"
+        self.lbl_connection_status_value.attributes['editor_constructor'] = "('disconnected')"
+        self.lbl_connection_status_value.attributes['class'] = "Label"
+        self.lbl_connection_status_value.attributes['editor_varname'] = "lbl_connection_status_value"
+        self.lbl_connection_status_value.style['font-weight'] = "bold"
+        self.lbl_connection_status_value.style['-webkit-order'] = "1933736976"
+        self.lbl_connection_status_value.style['top'] = "1px"
+        self.lbl_connection_status_value.style['position'] = "static"
+        self.lbl_connection_status_value.style['overflow'] = "auto"
+        self.lbl_connection_status_value.style['order'] = "1933736976"
+        self.lbl_connection_status_value.style['margin'] = "0px"
+        self.lbl_connection_status_value.style['display'] = "block"
+        sub_container_connection.append(self.lbl_connection_status_value,'lbl_connection_status_value')
         lbl_connection = Label('Link status')
         lbl_connection.attributes['editor_baseclass'] = "Label"
         lbl_connection.attributes['editor_tag_type'] = "widget"
@@ -493,7 +497,7 @@ class app_3d_printer_monitor(App):
         sub_container_connection.append(lbl_connection,'lbl_connection')
         main_container.append(sub_container_connection,'sub_container_connection')
         main_container.children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
-        main_container.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
+        sub_container_commands.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
         
 
         self.main_container = main_container
@@ -504,6 +508,11 @@ class app_3d_printer_monitor(App):
 
     def onclick_bt_emergency_stop(self,emitter):
         pass
+
+    def query_hotend_temperature(self):
+        self.printer.send('M105')
+        
+        Timer(5, self.query_hotend_temperature).start()
 
 
 
