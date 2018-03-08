@@ -518,8 +518,8 @@ class app_3d_printer_monitor(App):
     def query_temperatures(self):
         self.printer.send('M105', 5)
         #ok T:12.4 /0.0 B:13.0 /0.0 T0:12.4 /0.0 @:0 B@:0
-        nozzle = s.split('T:')[1].split('B:')[0]
-        bed = s.split('T:')[1].split('B:')[1].split(' T')[0]
+        nozzle = self.printer.buffer[0].split('T:')[1].split('B:')[0]
+        bed = self.printer.buffer[0].split('T:')[1].split('B:')[1].split(' T')[0]
 
         self.lbl_hotend_value.set_text(nozzle)
         self.lbl_bed_value.set_text(bed)
@@ -528,7 +528,7 @@ class app_3d_printer_monitor(App):
 
 
 #Configuration
-configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8072}
+configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8071}
 
 if __name__ == "__main__":
     # start(MyApp,address='127.0.0.1', port=8081, multiple_instance=False,enable_file_cache=True, update_interval=0.1, start_browser=True)
