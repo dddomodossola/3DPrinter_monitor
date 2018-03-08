@@ -5,12 +5,14 @@ import remi.gui as gui
 from remi.gui import *
 from remi import start, App
 import serial
+from threading import Timer
 
 class serial_interface():
     def __init__(self):
         self.sock = None
         self.buffer = [] #list of str
         self.connected = False
+        self.busy = False
 
     def reconnect(self, port='/dev/ttyUSB0'):
         self.sock = serial.Serial(port, 250000) # Establish the connection on a specific port
@@ -20,7 +22,7 @@ class serial_interface():
         self.sock.setTimeout(timeout)
         while True:
             #sleep(.1) # Delay for one tenth of a second
-            buf = ser.readline() # Read the newest output from the Arduino
+            buf = self.sock.readline() # Read the newest output from the Arduino
             #print( buf )
             if len(buf)<1:
                 break
@@ -29,11 +31,14 @@ class serial_interface():
 
     def send(self, msg, read_timeout):
         try:
+            self.busy = True
             self.sock.write(msg + '\n')
             self.read_buffer(read_timeout)
         except:
             self.connected = False
+        self.busy = False
 
+#M105 - get extruder temp  - 
 
 class app_3d_printer_monitor(App):
     def __init__(self, *args, **kwargs):
@@ -45,6 +50,9 @@ class app_3d_printer_monitor(App):
         pass
     
     def main(self):
+        self.printer = serial_interface()
+        self.printer.reconnect()
+        
         return app_3d_printer_monitor.construct_ui(self)
         
     @staticmethod
