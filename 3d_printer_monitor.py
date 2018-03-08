@@ -403,57 +403,6 @@ class app_3d_printer_monitor(App):
         list_log.style['left'] = "1px"
         sub_container_log.append(list_log,'list_log')
         main_container.append(sub_container_log,'sub_container_log')
-        sub_container_connection = HBox()
-        sub_container_connection.attributes['editor_baseclass'] = "HBox"
-        sub_container_connection.attributes['editor_tag_type'] = "widget"
-        sub_container_connection.attributes['editor_newclass'] = "False"
-        sub_container_connection.attributes['editor_constructor'] = "()"
-        sub_container_connection.attributes['class'] = "HBox"
-        sub_container_connection.attributes['editor_varname'] = "sub_container_connection"
-        sub_container_connection.style['flex-direction'] = "row"
-        sub_container_connection.style['height'] = "30px"
-        sub_container_connection.style['overflow'] = "auto"
-        sub_container_connection.style['-webkit-order'] = "1931441264"
-        sub_container_connection.style['top'] = "1px"
-        sub_container_connection.style['align-items'] = "center"
-        sub_container_connection.style['order'] = "0"
-        sub_container_connection.style['width'] = "300px"
-        sub_container_connection.style['justify-content'] = "space-around"
-        sub_container_connection.style['position'] = "static"
-        sub_container_connection.style['margin'] = "0px"
-        sub_container_connection.style['display'] = "flex"
-        lbl_connection_status_value = Label('disconnected')
-        lbl_connection_status_value.attributes['editor_baseclass'] = "Label"
-        lbl_connection_status_value.attributes['editor_tag_type'] = "widget"
-        lbl_connection_status_value.attributes['editor_newclass'] = "False"
-        lbl_connection_status_value.attributes['editor_constructor'] = "('disconnected')"
-        lbl_connection_status_value.attributes['class'] = "Label"
-        lbl_connection_status_value.attributes['editor_varname'] = "lbl_connection_status_value"
-        lbl_connection_status_value.style['font-weight'] = "bold"
-        lbl_connection_status_value.style['-webkit-order'] = "1933736976"
-        lbl_connection_status_value.style['top'] = "1px"
-        lbl_connection_status_value.style['position'] = "static"
-        lbl_connection_status_value.style['overflow'] = "auto"
-        lbl_connection_status_value.style['order'] = "1933736976"
-        lbl_connection_status_value.style['margin'] = "0px"
-        lbl_connection_status_value.style['display'] = "block"
-        sub_container_connection.append(lbl_connection_status_value,'lbl_connection_status_value')
-        lbl_connection = Label('Link status')
-        lbl_connection.attributes['editor_baseclass'] = "Label"
-        lbl_connection.attributes['editor_tag_type'] = "widget"
-        lbl_connection.attributes['editor_newclass'] = "False"
-        lbl_connection.attributes['editor_constructor'] = "('Link status')"
-        lbl_connection.attributes['class'] = "Label"
-        lbl_connection.attributes['editor_varname'] = "lbl_connection"
-        lbl_connection.style['-webkit-order'] = "1949207504"
-        lbl_connection.style['top'] = "1px"
-        lbl_connection.style['position'] = "static"
-        lbl_connection.style['overflow'] = "auto"
-        lbl_connection.style['order'] = "1"
-        lbl_connection.style['margin'] = "0px"
-        lbl_connection.style['display'] = "block"
-        sub_container_connection.append(lbl_connection,'lbl_connection')
-        main_container.append(sub_container_connection,'sub_container_connection')
         main_container.children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
         main_container.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
         
