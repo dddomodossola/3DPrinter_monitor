@@ -24,11 +24,13 @@ class serial_interface():
         while True:
             #sleep(.1) # Delay for one tenth of a second
             buf = self.sock.readline() # Read the newest output from the Arduino
-            #print( buf )
+            print(type(buf))
+            buf = str(buf)
+            print( buf )
             if len(buf)<1:
                 break
             else:
-                self.log_list_widget.append(gui.ListItem("<<<"+buf))
+                self.log_list_widget.append(gui.ListItem("recv:"+buf))
                 self.buffer.append(buf)
 
     def send(self, msg, read_timeout):
@@ -51,13 +53,17 @@ class app_3d_printer_monitor(App):
 
     def idle(self):
         #idle function called every update cycle
-        self.lbl_connection_status_value.set_text('connected' if self.printer.connected else 'disconnected')
-    
+        try:
+            self.lbl_connection_status_value.set_text('connected' if self.printer.connected else 'disconnected')
+        except:
+            pass
+
     def main(self):
-        self.printer = serial_interface()
+        r = app_3d_printer_monitor.construct_ui(self)
+        self.printer = serial_interface(self.list_log)
         self.printer.reconnect()
-        
-        return app_3d_printer_monitor.construct_ui(self)
+        self.query_temperatures()
+        return r
         
     @staticmethod
     def construct_ui(self):
@@ -193,25 +199,25 @@ class app_3d_printer_monitor(App):
         lbl_hotend.style['order'] = "0"
         lbl_hotend.style['left'] = "1px"
         sub_container_hotend.append(lbl_hotend,'lbl_hotend')
-        lbl_hotend_value = Label('0�')
-        lbl_hotend_value.attributes['editor_newclass'] = "False"
-        lbl_hotend_value.attributes['editor_baseclass'] = "Label"
-        lbl_hotend_value.attributes['editor_constructor'] = "('0�')"
-        lbl_hotend_value.attributes['class'] = "Label"
-        lbl_hotend_value.attributes['editor_tag_type'] = "widget"
-        lbl_hotend_value.attributes['editor_varname'] = "lbl_hotend_value"
-        lbl_hotend_value.style['font-size'] = "30px"
-        lbl_hotend_value.style['-webkit-order'] = "59575408"
-        lbl_hotend_value.style['top'] = "1px"
-        lbl_hotend_value.style['height'] = "30px"
-        lbl_hotend_value.style['width'] = "100px"
-        lbl_hotend_value.style['display'] = "block"
-        lbl_hotend_value.style['position'] = "static"
-        lbl_hotend_value.style['overflow'] = "auto"
-        lbl_hotend_value.style['margin'] = "0px"
-        lbl_hotend_value.style['order'] = "1"
-        lbl_hotend_value.style['left'] = "1px"
-        sub_container_hotend.append(lbl_hotend_value,'lbl_hotend_value')
+        self.lbl_hotend_value = Label('0°')
+        self.lbl_hotend_value.attributes['editor_newclass'] = "False"
+        self.lbl_hotend_value.attributes['editor_baseclass'] = "Label"
+        self.lbl_hotend_value.attributes['editor_constructor'] = "('0°')"
+        self.lbl_hotend_value.attributes['class'] = "Label"
+        self.lbl_hotend_value.attributes['editor_tag_type'] = "widget"
+        self.lbl_hotend_value.attributes['editor_varname'] = "lbl_hotend_value"
+        self.lbl_hotend_value.style['font-size'] = "30px"
+        self.lbl_hotend_value.style['-webkit-order'] = "59575408"
+        self.lbl_hotend_value.style['top'] = "1px"
+        self.lbl_hotend_value.style['height'] = "30px"
+        self.lbl_hotend_value.style['width'] = "100px"
+        self.lbl_hotend_value.style['display'] = "block"
+        self.lbl_hotend_value.style['position'] = "static"
+        self.lbl_hotend_value.style['overflow'] = "auto"
+        self.lbl_hotend_value.style['margin'] = "0px"
+        self.lbl_hotend_value.style['order'] = "1"
+        self.lbl_hotend_value.style['left'] = "1px"
+        sub_container_hotend.append(self.lbl_hotend_value,'lbl_hotend_value')
         main_container.append(sub_container_hotend,'sub_container_hotend')
         sub_container_commands = HBox()
         sub_container_commands.attributes['editor_newclass'] = "False"
@@ -349,25 +355,25 @@ class app_3d_printer_monitor(App):
         sub_container_hotbed.style['margin'] = "0px"
         sub_container_hotbed.style['display'] = "flex"
         sub_container_hotbed.style['left'] = "1px"
-        lbl_bed_value = Label('0�')
-        lbl_bed_value.attributes['editor_newclass'] = "False"
-        lbl_bed_value.attributes['editor_baseclass'] = "Label"
-        lbl_bed_value.attributes['editor_constructor'] = "('0�')"
-        lbl_bed_value.attributes['class'] = "Label"
-        lbl_bed_value.attributes['editor_tag_type'] = "widget"
-        lbl_bed_value.attributes['editor_varname'] = "lbl_bed_value"
-        lbl_bed_value.style['font-size'] = "30px"
-        lbl_bed_value.style['-webkit-order'] = "18323216"
-        lbl_bed_value.style['top'] = "1px"
-        lbl_bed_value.style['height'] = "30px"
-        lbl_bed_value.style['width'] = "100px"
-        lbl_bed_value.style['display'] = "block"
-        lbl_bed_value.style['position'] = "static"
-        lbl_bed_value.style['overflow'] = "auto"
-        lbl_bed_value.style['margin'] = "0px"
-        lbl_bed_value.style['order'] = "1"
-        lbl_bed_value.style['left'] = "1px"
-        sub_container_hotbed.append(lbl_bed_value,'lbl_bed_value')
+        self.lbl_bed_value = Label('0°')
+        self.lbl_bed_value.attributes['editor_newclass'] = "False"
+        self.lbl_bed_value.attributes['editor_baseclass'] = "Label"
+        self.lbl_bed_value.attributes['editor_constructor'] = "('0°')"
+        self.lbl_bed_value.attributes['class'] = "Label"
+        self.lbl_bed_value.attributes['editor_tag_type'] = "widget"
+        self.lbl_bed_value.attributes['editor_varname'] = "lbl_bed_value"
+        self.lbl_bed_value.style['font-size'] = "30px"
+        self.lbl_bed_value.style['-webkit-order'] = "18323216"
+        self.lbl_bed_value.style['top'] = "1px"
+        self.lbl_bed_value.style['height'] = "30px"
+        self.lbl_bed_value.style['width'] = "100px"
+        self.lbl_bed_value.style['display'] = "block"
+        self.lbl_bed_value.style['position'] = "static"
+        self.lbl_bed_value.style['overflow'] = "auto"
+        self.lbl_bed_value.style['margin'] = "0px"
+        self.lbl_bed_value.style['order'] = "1"
+        self.lbl_bed_value.style['left'] = "1px"
+        sub_container_hotbed.append(self.lbl_bed_value,'lbl_bed_value')
         lbl_bed = Label('BED Temperature')
         lbl_bed.attributes['editor_newclass'] = "False"
         lbl_bed.attributes['editor_baseclass'] = "Label"
@@ -426,24 +432,24 @@ class app_3d_printer_monitor(App):
         lbl_log.style['order'] = "0"
         lbl_log.style['left'] = "1px"
         sub_container_log.append(lbl_log,'lbl_log')
-        list_log = ListView(True)
-        list_log.attributes['editor_newclass'] = "False"
-        list_log.attributes['editor_baseclass'] = "ListView"
-        list_log.attributes['editor_constructor'] = "(True)"
-        list_log.attributes['class'] = "ListView"
-        list_log.attributes['editor_tag_type'] = "widget"
-        list_log.attributes['editor_varname'] = "list_log"
-        list_log.style['width'] = "100%"
-        list_log.style['top'] = "1px"
-        list_log.style['height'] = "150px"
-        list_log.style['-webkit-order'] = "71761648"
-        list_log.style['display'] = "block"
-        list_log.style['position'] = "static"
-        list_log.style['overflow'] = "auto"
-        list_log.style['margin'] = "0px"
-        list_log.style['order'] = "1"
-        list_log.style['left'] = "1px"
-        sub_container_log.append(list_log,'list_log')
+        self.list_log = ListView(True)
+        self.list_log.attributes['editor_newclass'] = "False"
+        self.list_log.attributes['editor_baseclass'] = "ListView"
+        self.list_log.attributes['editor_constructor'] = "(True)"
+        self.list_log.attributes['class'] = "ListView"
+        self.list_log.attributes['editor_tag_type'] = "widget"
+        self.list_log.attributes['editor_varname'] = "list_log"
+        self.list_log.style['width'] = "100%"
+        self.list_log.style['top'] = "1px"
+        self.list_log.style['height'] = "150px"
+        self.list_log.style['-webkit-order'] = "71761648"
+        self.list_log.style['display'] = "block"
+        self.list_log.style['position'] = "static"
+        self.list_log.style['overflow'] = "auto"
+        self.list_log.style['margin'] = "0px"
+        self.list_log.style['order'] = "1"
+        self.list_log.style['left'] = "1px"
+        sub_container_log.append(self.list_log,'list_log')
         main_container.append(sub_container_log,'sub_container_log')
         sub_container_connection = HBox()
         sub_container_connection.attributes['editor_baseclass'] = "HBox"
@@ -496,8 +502,8 @@ class app_3d_printer_monitor(App):
         lbl_connection.style['display'] = "block"
         sub_container_connection.append(lbl_connection,'lbl_connection')
         main_container.append(sub_container_connection,'sub_container_connection')
-        main_container.children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
-        sub_container_commands.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
+        sub_container_commands.children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
+        main_container.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
         
 
         self.main_container = main_container
@@ -509,15 +515,20 @@ class app_3d_printer_monitor(App):
     def onclick_bt_emergency_stop(self,emitter):
         pass
 
-    def query_hotend_temperature(self):
-        self.printer.send('M105')
-        
-        Timer(5, self.query_hotend_temperature).start()
+    def query_temperatures(self):
+        self.printer.send('M105', 5)
+        #ok T:12.4 /0.0 B:13.0 /0.0 T0:12.4 /0.0 @:0 B@:0
+        nozzle = s.split('T:')[1].split('B:')[0]
+        bed = s.split('T:')[1].split('B:')[1].split(' T')[0]
+
+        self.lbl_hotend_value.set_text(nozzle)
+        self.lbl_bed_value.set_text(bed)
+        Timer(5, self.query_temperatures).start()
 
 
 
 #Configuration
-configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8081}
+configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8072}
 
 if __name__ == "__main__":
     # start(MyApp,address='127.0.0.1', port=8081, multiple_instance=False,enable_file_cache=True, update_interval=0.1, start_browser=True)
