@@ -4,6 +4,35 @@
 import remi.gui as gui
 from remi.gui import *
 from remi import start, App
+import serial
+
+class serial_interface():
+    def __init__(self):
+        self.sock = None
+        self.buffer = [] #list of str
+        self.connected = False
+
+    def reconnect(self, port='/dev/ttyUSB0'):
+        self.sock = serial.Serial(port, 250000) # Establish the connection on a specific port
+        self.connected = self.sock.isOpen()
+
+    def read_buffer(self, timeout=1.0):
+        self.sock.setTimeout(timeout)
+        while True:
+            #sleep(.1) # Delay for one tenth of a second
+            buf = ser.readline() # Read the newest output from the Arduino
+            #print( buf )
+            if len(buf)<1:
+                break
+            else:
+                self.buffer.append(buf)
+
+    def send(self, msg, read_timeout):
+        try:
+            self.sock.write(msg + '\n')
+            self.read_buffer(read_timeout)
+        except:
+            self.connected = False
 
 
 class app_3d_printer_monitor(App):
