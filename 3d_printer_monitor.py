@@ -29,11 +29,14 @@ class serial_interface():
             print(type(buf))
             buf = str(buf)
             print( buf )
-            if len(buf)<1 or buf.startswith('ok'):
+            if len(buf)<1:
                 break
             else:
                 self.log_list_widget.append(gui.ListItem("recv:"+buf))
                 recv_buffer.append(buf)
+            
+            if buf.startswith('ok'):
+                break
         return recv_buffer
 
     def buffered_send(self, msg, timeout, listener):
@@ -44,14 +47,17 @@ class serial_interface():
             answer = None
             item = self.send_buffer[0]
             self.send_buffer.remove(item)
-            self.log_list_widget.append(gui.ListItem("send:"+item.msg))
+            self.log_list_widget.append(gui.ListItem("send:"+item['msg']))
             try:
-                self.sock.write(item.msg + '\n')
-                answer = self.read_buffer(item.timeout)
+                self.sock.write(item['msg'] + '\n')
+                answer = self.read_buffer(item['timeout'])
             except:
                 self.connected = False
-            if not item.listener==None:
-                item.listener(answer) #callback
+            if not item['listener']==None:
+                try:
+                    item['listener'](answer) #callback
+                except:
+                    pass
         Timer(0.5, self.process_next_msg).start()
         
 
@@ -579,6 +585,7 @@ class app_3d_printer_monitor(App):
         self.lbl_hotend_value = lbl_hotend_value
         self.lbl_bed_value = lbl_bed_value
         self.txt_gcode_input = txt_gcode_input
+        self.list_log = list_log
 
         self.main_container = main_container
         return self.main_container
@@ -598,7 +605,13 @@ class app_3d_printer_monitor(App):
         if result == None:
             return
 
+        if len(result) < 1:
+            return
+
         #ok T:12.4 /0.0 B:13.0 /0.0 T0:12.4 /0.0 @:0 B@:0
+        result = result[0]
+        if not 'T:' in result:
+            return
         nozzle = result.split('T:')[1].split('B:')[0]
         bed = result.split('T:')[1].split('B:')[1].split(' T')[0]
         self.lbl_hotend_value.set_text(nozzle)
@@ -616,7 +629,7 @@ class app_3d_printer_monitor(App):
 
 
 #Configuration
-configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8071}
+configuration = {'config_multiple_instance': True, 'config_address': '0.0.0.0', 'config_start_browser': True, 'config_enable_file_cache': True, 'config_project_name': 'app_3d_printer_monitor', 'config_resourcepath': './res/', 'config_port': 8081}
 
 if __name__ == "__main__":
     # start(MyApp,address='127.0.0.1', port=8081, multiple_instance=False,enable_file_cache=True, update_interval=0.1, start_browser=True)
