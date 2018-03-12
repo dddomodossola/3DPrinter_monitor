@@ -50,7 +50,8 @@ class serial_interface():
                 answer = self.read_buffer(item.timeout)
             except:
                 self.connected = False
-            item.listener(answer) #callback
+            if not item.listener==None:
+                item.listener(answer) #callback
         Timer(0.5, self.process_next_msg).start()
         
 
@@ -89,8 +90,8 @@ class app_3d_printer_monitor(App):
         main_container.style['align-items'] = "center"
         main_container.style['top'] = "1px"
         main_container.style['flex-direction'] = "column"
-        main_container.style['height'] = "579px"
-        main_container.style['width'] = "525px"
+        main_container.style['height'] = "587px"
+        main_container.style['width'] = "556px"
         main_container.style['justify-content'] = "space-around"
         main_container.style['position'] = "absolute"
         main_container.style['overflow'] = "auto"
@@ -115,7 +116,7 @@ class app_3d_printer_monitor(App):
         sub_container_printjob_status.style['justify-content'] = "space-between"
         sub_container_printjob_status.style['position'] = "static"
         sub_container_printjob_status.style['overflow'] = "auto"
-        sub_container_printjob_status.style['order'] = "4"
+        sub_container_printjob_status.style['order'] = "30"
         sub_container_printjob_status.style['margin'] = "0px"
         sub_container_printjob_status.style['display'] = "flex"
         sub_container_printjob_status.style['left'] = "1px"
@@ -166,7 +167,7 @@ class app_3d_printer_monitor(App):
         lbl_title.style['font-size'] = "30px"
         lbl_title.style['display'] = "block"
         lbl_title.style['top'] = "1px"
-        lbl_title.style['height'] = "30px"
+        lbl_title.style['height'] = "37px"
         lbl_title.style['-webkit-order'] = "59521456"
         lbl_title.style['position'] = "static"
         lbl_title.style['overflow'] = "auto"
@@ -211,25 +212,25 @@ class app_3d_printer_monitor(App):
         lbl_hotend.style['order'] = "0"
         lbl_hotend.style['left'] = "1px"
         sub_container_hotend.append(lbl_hotend,'lbl_hotend')
-        self.lbl_hotend_value = Label('0°')
-        self.lbl_hotend_value.attributes['editor_newclass'] = "False"
-        self.lbl_hotend_value.attributes['editor_baseclass'] = "Label"
-        self.lbl_hotend_value.attributes['editor_constructor'] = "('0°')"
-        self.lbl_hotend_value.attributes['class'] = "Label"
-        self.lbl_hotend_value.attributes['editor_tag_type'] = "widget"
-        self.lbl_hotend_value.attributes['editor_varname'] = "lbl_hotend_value"
-        self.lbl_hotend_value.style['font-size'] = "30px"
-        self.lbl_hotend_value.style['-webkit-order'] = "59575408"
-        self.lbl_hotend_value.style['top'] = "1px"
-        self.lbl_hotend_value.style['height'] = "30px"
-        self.lbl_hotend_value.style['width'] = "100px"
-        self.lbl_hotend_value.style['display'] = "block"
-        self.lbl_hotend_value.style['position'] = "static"
-        self.lbl_hotend_value.style['overflow'] = "auto"
-        self.lbl_hotend_value.style['margin'] = "0px"
-        self.lbl_hotend_value.style['order'] = "1"
-        self.lbl_hotend_value.style['left'] = "1px"
-        sub_container_hotend.append(self.lbl_hotend_value,'lbl_hotend_value')
+        lbl_hotend_value = Label('0�')
+        lbl_hotend_value.attributes['editor_newclass'] = "False"
+        lbl_hotend_value.attributes['editor_baseclass'] = "Label"
+        lbl_hotend_value.attributes['editor_constructor'] = "('0�')"
+        lbl_hotend_value.attributes['class'] = "Label"
+        lbl_hotend_value.attributes['editor_tag_type'] = "widget"
+        lbl_hotend_value.attributes['editor_varname'] = "lbl_hotend_value"
+        lbl_hotend_value.style['font-size'] = "30px"
+        lbl_hotend_value.style['-webkit-order'] = "59575408"
+        lbl_hotend_value.style['top'] = "1px"
+        lbl_hotend_value.style['height'] = "30px"
+        lbl_hotend_value.style['width'] = "100px"
+        lbl_hotend_value.style['display'] = "block"
+        lbl_hotend_value.style['position'] = "static"
+        lbl_hotend_value.style['overflow'] = "auto"
+        lbl_hotend_value.style['margin'] = "0px"
+        lbl_hotend_value.style['order'] = "1"
+        lbl_hotend_value.style['left'] = "1px"
+        sub_container_hotend.append(lbl_hotend_value,'lbl_hotend_value')
         main_container.append(sub_container_hotend,'sub_container_hotend')
         sub_container_commands = HBox()
         sub_container_commands.attributes['editor_newclass'] = "False"
@@ -247,7 +248,7 @@ class app_3d_printer_monitor(App):
         sub_container_commands.style['justify-content'] = "space-around"
         sub_container_commands.style['position'] = "static"
         sub_container_commands.style['overflow'] = "auto"
-        sub_container_commands.style['order'] = "5"
+        sub_container_commands.style['order'] = "50"
         sub_container_commands.style['margin'] = "0px"
         sub_container_commands.style['display'] = "flex"
         sub_container_commands.style['left'] = "1px"
@@ -302,51 +303,30 @@ class app_3d_printer_monitor(App):
         link_command_help.style['order'] = "74300752"
         link_command_help.style['left'] = "1px"
         sub_container_commands.append(link_command_help,'link_command_help')
-        self.txt_gcode_input = TextInput(True,'G28')
-        self.txt_gcode_input.attributes['rows'] = "1"
-        self.txt_gcode_input.attributes['editor_baseclass'] = "TextInput"
-        self.txt_gcode_input.attributes['editor_constructor'] = "(True,'G28')"
-        self.txt_gcode_input.attributes['class'] = "TextInput"
-        self.txt_gcode_input.attributes['autocomplete'] = "off"
-        self.txt_gcode_input.attributes['editor_tag_type'] = "widget"
-        self.txt_gcode_input.attributes['editor_newclass'] = "False"
-        self.txt_gcode_input.attributes['editor_varname'] = "txt_gcode_input"
-        self.txt_gcode_input.attributes['placeholder'] = "G28"
-        self.txt_gcode_input.style['font-size'] = "20px"
-        self.txt_gcode_input.style['width'] = "350px"
-        self.txt_gcode_input.style['top'] = "1px"
-        self.txt_gcode_input.style['height'] = "30px"
-        self.txt_gcode_input.style['-webkit-order'] = "107654000"
-        self.txt_gcode_input.style['display'] = "block"
-        self.txt_gcode_input.style['position'] = "static"
-        self.txt_gcode_input.style['overflow'] = "auto"
-        self.txt_gcode_input.style['margin'] = "0px"
-        self.txt_gcode_input.style['order'] = "1"
-        self.txt_gcode_input.style['resize'] = "none"
-        self.txt_gcode_input.style['left'] = "1px"
-        sub_container_commands.append(self.txt_gcode_input,'txt_gcode_input')
+        txt_gcode_input = TextInput(True,'G28')
+        txt_gcode_input.attributes['rows'] = "1"
+        txt_gcode_input.attributes['editor_baseclass'] = "TextInput"
+        txt_gcode_input.attributes['editor_constructor'] = "(True,'G28')"
+        txt_gcode_input.attributes['class'] = "TextInput"
+        txt_gcode_input.attributes['autocomplete'] = "off"
+        txt_gcode_input.attributes['editor_tag_type'] = "widget"
+        txt_gcode_input.attributes['editor_newclass'] = "False"
+        txt_gcode_input.attributes['editor_varname'] = "txt_gcode_input"
+        txt_gcode_input.attributes['placeholder'] = "G28"
+        txt_gcode_input.style['font-size'] = "20px"
+        txt_gcode_input.style['width'] = "350px"
+        txt_gcode_input.style['top'] = "1px"
+        txt_gcode_input.style['height'] = "30px"
+        txt_gcode_input.style['-webkit-order'] = "107654000"
+        txt_gcode_input.style['display'] = "block"
+        txt_gcode_input.style['position'] = "static"
+        txt_gcode_input.style['overflow'] = "auto"
+        txt_gcode_input.style['margin'] = "0px"
+        txt_gcode_input.style['order'] = "1"
+        txt_gcode_input.style['resize'] = "none"
+        txt_gcode_input.style['left'] = "1px"
+        sub_container_commands.append(txt_gcode_input,'txt_gcode_input')
         main_container.append(sub_container_commands,'sub_container_commands')
-        bt_emergency_stop = Button('STOP')
-        bt_emergency_stop.attributes['editor_newclass'] = "False"
-        bt_emergency_stop.attributes['editor_baseclass'] = "Button"
-        bt_emergency_stop.attributes['editor_constructor'] = "('STOP')"
-        bt_emergency_stop.attributes['class'] = "Button"
-        bt_emergency_stop.attributes['editor_tag_type'] = "widget"
-        bt_emergency_stop.attributes['editor_varname'] = "bt_emergency_stop"
-        bt_emergency_stop.style['font-size'] = "30px"
-        bt_emergency_stop.style['-webkit-order'] = "78855728"
-        bt_emergency_stop.style['top'] = "1px"
-        bt_emergency_stop.style['height'] = "120px"
-        bt_emergency_stop.style['order'] = "3"
-        bt_emergency_stop.style['width'] = "120px"
-        bt_emergency_stop.style['position'] = "static"
-        bt_emergency_stop.style['overflow'] = "auto"
-        bt_emergency_stop.style['font-weight'] = "bolder"
-        bt_emergency_stop.style['margin'] = "0px"
-        bt_emergency_stop.style['display'] = "block"
-        bt_emergency_stop.style['background-color'] = "#ff1111"
-        bt_emergency_stop.style['left'] = "1px"
-        main_container.append(bt_emergency_stop,'bt_emergency_stop')
         sub_container_hotbed = HBox()
         sub_container_hotbed.attributes['editor_newclass'] = "False"
         sub_container_hotbed.attributes['editor_baseclass'] = "HBox"
@@ -363,29 +343,29 @@ class app_3d_printer_monitor(App):
         sub_container_hotbed.style['justify-content'] = "space-between"
         sub_container_hotbed.style['position'] = "static"
         sub_container_hotbed.style['overflow'] = "auto"
-        sub_container_hotbed.style['order'] = "2"
+        sub_container_hotbed.style['order'] = "20"
         sub_container_hotbed.style['margin'] = "0px"
         sub_container_hotbed.style['display'] = "flex"
         sub_container_hotbed.style['left'] = "1px"
-        self.lbl_bed_value = Label('0°')
-        self.lbl_bed_value.attributes['editor_newclass'] = "False"
-        self.lbl_bed_value.attributes['editor_baseclass'] = "Label"
-        self.lbl_bed_value.attributes['editor_constructor'] = "('0°')"
-        self.lbl_bed_value.attributes['class'] = "Label"
-        self.lbl_bed_value.attributes['editor_tag_type'] = "widget"
-        self.lbl_bed_value.attributes['editor_varname'] = "lbl_bed_value"
-        self.lbl_bed_value.style['font-size'] = "30px"
-        self.lbl_bed_value.style['-webkit-order'] = "18323216"
-        self.lbl_bed_value.style['top'] = "1px"
-        self.lbl_bed_value.style['height'] = "30px"
-        self.lbl_bed_value.style['width'] = "100px"
-        self.lbl_bed_value.style['display'] = "block"
-        self.lbl_bed_value.style['position'] = "static"
-        self.lbl_bed_value.style['overflow'] = "auto"
-        self.lbl_bed_value.style['margin'] = "0px"
-        self.lbl_bed_value.style['order'] = "1"
-        self.lbl_bed_value.style['left'] = "1px"
-        sub_container_hotbed.append(self.lbl_bed_value,'lbl_bed_value')
+        lbl_bed_value = Label('0�')
+        lbl_bed_value.attributes['editor_newclass'] = "False"
+        lbl_bed_value.attributes['editor_baseclass'] = "Label"
+        lbl_bed_value.attributes['editor_constructor'] = "('0�')"
+        lbl_bed_value.attributes['class'] = "Label"
+        lbl_bed_value.attributes['editor_tag_type'] = "widget"
+        lbl_bed_value.attributes['editor_varname'] = "lbl_bed_value"
+        lbl_bed_value.style['font-size'] = "30px"
+        lbl_bed_value.style['-webkit-order'] = "18323216"
+        lbl_bed_value.style['top'] = "1px"
+        lbl_bed_value.style['height'] = "30px"
+        lbl_bed_value.style['width'] = "100px"
+        lbl_bed_value.style['display'] = "block"
+        lbl_bed_value.style['position'] = "static"
+        lbl_bed_value.style['overflow'] = "auto"
+        lbl_bed_value.style['margin'] = "0px"
+        lbl_bed_value.style['order'] = "1"
+        lbl_bed_value.style['left'] = "1px"
+        sub_container_hotbed.append(lbl_bed_value,'lbl_bed_value')
         lbl_bed = Label('BED Temperature')
         lbl_bed.attributes['editor_newclass'] = "False"
         lbl_bed.attributes['editor_baseclass'] = "Label"
@@ -416,7 +396,7 @@ class app_3d_printer_monitor(App):
         sub_container_log.style['top'] = "1px"
         sub_container_log.style['flex-direction'] = "column"
         sub_container_log.style['border-width'] = "1px"
-        sub_container_log.style['order'] = "6"
+        sub_container_log.style['order'] = "60"
         sub_container_log.style['-webkit-order'] = "113811728"
         sub_container_log.style['border-style'] = "dotted"
         sub_container_log.style['width'] = "99%"
@@ -436,7 +416,7 @@ class app_3d_printer_monitor(App):
         lbl_log.attributes['editor_varname'] = "lbl_log"
         lbl_log.style['display'] = "block"
         lbl_log.style['top'] = "1px"
-        lbl_log.style['height'] = "30px"
+        lbl_log.style['height'] = "35px"
         lbl_log.style['-webkit-order'] = "109084816"
         lbl_log.style['position'] = "static"
         lbl_log.style['overflow'] = "auto"
@@ -444,79 +424,161 @@ class app_3d_printer_monitor(App):
         lbl_log.style['order'] = "0"
         lbl_log.style['left'] = "1px"
         sub_container_log.append(lbl_log,'lbl_log')
-        self.list_log = ListView(True)
-        self.list_log.attributes['editor_newclass'] = "False"
-        self.list_log.attributes['editor_baseclass'] = "ListView"
-        self.list_log.attributes['editor_constructor'] = "(True)"
-        self.list_log.attributes['class'] = "ListView"
-        self.list_log.attributes['editor_tag_type'] = "widget"
-        self.list_log.attributes['editor_varname'] = "list_log"
-        self.list_log.style['width'] = "100%"
-        self.list_log.style['top'] = "1px"
-        self.list_log.style['height'] = "150px"
-        self.list_log.style['-webkit-order'] = "71761648"
-        self.list_log.style['display'] = "block"
-        self.list_log.style['position'] = "static"
-        self.list_log.style['overflow'] = "auto"
-        self.list_log.style['margin'] = "0px"
-        self.list_log.style['order'] = "1"
-        self.list_log.style['left'] = "1px"
-        sub_container_log.append(self.list_log,'list_log')
+        list_log = ListView(True)
+        list_log.attributes['editor_newclass'] = "False"
+        list_log.attributes['editor_baseclass'] = "ListView"
+        list_log.attributes['editor_constructor'] = "(True)"
+        list_log.attributes['class'] = "ListView"
+        list_log.attributes['editor_tag_type'] = "widget"
+        list_log.attributes['editor_varname'] = "list_log"
+        list_log.style['width'] = "100%"
+        list_log.style['top'] = "1px"
+        list_log.style['height'] = "150px"
+        list_log.style['-webkit-order'] = "71761648"
+        list_log.style['display'] = "block"
+        list_log.style['position'] = "static"
+        list_log.style['overflow'] = "auto"
+        list_log.style['margin'] = "0px"
+        list_log.style['order'] = "1"
+        list_log.style['left'] = "1px"
+        sub_container_log.append(list_log,'list_log')
         main_container.append(sub_container_log,'sub_container_log')
         sub_container_connection = HBox()
-        sub_container_connection.attributes['editor_baseclass'] = "HBox"
-        sub_container_connection.attributes['editor_tag_type'] = "widget"
         sub_container_connection.attributes['editor_newclass'] = "False"
+        sub_container_connection.attributes['editor_baseclass'] = "HBox"
         sub_container_connection.attributes['editor_constructor'] = "()"
         sub_container_connection.attributes['class'] = "HBox"
+        sub_container_connection.attributes['editor_tag_type'] = "widget"
         sub_container_connection.attributes['editor_varname'] = "sub_container_connection"
+        sub_container_connection.style['align-items'] = "center"
+        sub_container_connection.style['top'] = "1px"
         sub_container_connection.style['flex-direction'] = "row"
         sub_container_connection.style['height'] = "30px"
-        sub_container_connection.style['overflow'] = "auto"
         sub_container_connection.style['-webkit-order'] = "1931441264"
-        sub_container_connection.style['top'] = "1px"
-        sub_container_connection.style['align-items'] = "center"
-        sub_container_connection.style['order'] = "0"
         sub_container_connection.style['width'] = "300px"
         sub_container_connection.style['justify-content'] = "space-around"
         sub_container_connection.style['position'] = "static"
+        sub_container_connection.style['overflow'] = "auto"
+        sub_container_connection.style['order'] = "10"
         sub_container_connection.style['margin'] = "0px"
         sub_container_connection.style['display'] = "flex"
-        self.lbl_connection_status_value = Label('disconnected')
-        self.lbl_connection_status_value.attributes['editor_baseclass'] = "Label"
-        self.lbl_connection_status_value.attributes['editor_tag_type'] = "widget"
-        self.lbl_connection_status_value.attributes['editor_newclass'] = "False"
-        self.lbl_connection_status_value.attributes['editor_constructor'] = "('disconnected')"
-        self.lbl_connection_status_value.attributes['class'] = "Label"
-        self.lbl_connection_status_value.attributes['editor_varname'] = "lbl_connection_status_value"
-        self.lbl_connection_status_value.style['font-weight'] = "bold"
-        self.lbl_connection_status_value.style['-webkit-order'] = "1933736976"
-        self.lbl_connection_status_value.style['top'] = "1px"
-        self.lbl_connection_status_value.style['position'] = "static"
-        self.lbl_connection_status_value.style['overflow'] = "auto"
-        self.lbl_connection_status_value.style['order'] = "1933736976"
-        self.lbl_connection_status_value.style['margin'] = "0px"
-        self.lbl_connection_status_value.style['display'] = "block"
-        sub_container_connection.append(self.lbl_connection_status_value,'lbl_connection_status_value')
+        sub_container_connection.style['left'] = "1px"
         lbl_connection = Label('Link status')
-        lbl_connection.attributes['editor_baseclass'] = "Label"
-        lbl_connection.attributes['editor_tag_type'] = "widget"
         lbl_connection.attributes['editor_newclass'] = "False"
+        lbl_connection.attributes['editor_baseclass'] = "Label"
         lbl_connection.attributes['editor_constructor'] = "('Link status')"
         lbl_connection.attributes['class'] = "Label"
+        lbl_connection.attributes['editor_tag_type'] = "widget"
         lbl_connection.attributes['editor_varname'] = "lbl_connection"
-        lbl_connection.style['-webkit-order'] = "1949207504"
         lbl_connection.style['top'] = "1px"
+        lbl_connection.style['display'] = "block"
+        lbl_connection.style['-webkit-order'] = "1949207504"
         lbl_connection.style['position'] = "static"
         lbl_connection.style['overflow'] = "auto"
-        lbl_connection.style['order'] = "1"
         lbl_connection.style['margin'] = "0px"
-        lbl_connection.style['display'] = "block"
+        lbl_connection.style['order'] = "1"
+        lbl_connection.style['left'] = "1px"
         sub_container_connection.append(lbl_connection,'lbl_connection')
+        lbl_connection_status_value = Label('disconnected')
+        lbl_connection_status_value.attributes['editor_newclass'] = "False"
+        lbl_connection_status_value.attributes['editor_baseclass'] = "Label"
+        lbl_connection_status_value.attributes['editor_constructor'] = "('disconnected')"
+        lbl_connection_status_value.attributes['class'] = "Label"
+        lbl_connection_status_value.attributes['editor_tag_type'] = "widget"
+        lbl_connection_status_value.attributes['editor_varname'] = "lbl_connection_status_value"
+        lbl_connection_status_value.style['top'] = "1px"
+        lbl_connection_status_value.style['display'] = "block"
+        lbl_connection_status_value.style['-webkit-order'] = "1933736976"
+        lbl_connection_status_value.style['position'] = "static"
+        lbl_connection_status_value.style['overflow'] = "auto"
+        lbl_connection_status_value.style['font-weight'] = "bold"
+        lbl_connection_status_value.style['margin'] = "0px"
+        lbl_connection_status_value.style['order'] = "1933736976"
+        lbl_connection_status_value.style['left'] = "1px"
+        sub_container_connection.append(lbl_connection_status_value,'lbl_connection_status_value')
         main_container.append(sub_container_connection,'sub_container_connection')
-        sub_container_commands.children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
-        main_container.children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
+        fast_commanfs_container = HBox()
+        fast_commanfs_container.attributes['editor_baseclass'] = "HBox"
+        fast_commanfs_container.attributes['editor_tag_type'] = "widget"
+        fast_commanfs_container.attributes['editor_newclass'] = "False"
+        fast_commanfs_container.attributes['editor_constructor'] = "()"
+        fast_commanfs_container.attributes['class'] = "HBox"
+        fast_commanfs_container.attributes['editor_varname'] = "fast_commanfs_container"
+        fast_commanfs_container.style['flex-direction'] = "row"
+        fast_commanfs_container.style['overflow'] = "auto"
+        fast_commanfs_container.style['-webkit-order'] = "112851856"
+        fast_commanfs_container.style['top'] = "1px"
+        fast_commanfs_container.style['align-items'] = "center"
+        fast_commanfs_container.style['order'] = "41"
+        fast_commanfs_container.style['width'] = "100%"
+        fast_commanfs_container.style['justify-content'] = "space-around"
+        fast_commanfs_container.style['position'] = "static"
+        fast_commanfs_container.style['margin'] = "0px"
+        fast_commanfs_container.style['display'] = "flex"
+        bt_emergency_stop = Button('STOP')
+        bt_emergency_stop.attributes['editor_newclass'] = "False"
+        bt_emergency_stop.attributes['editor_baseclass'] = "Button"
+        bt_emergency_stop.attributes['editor_constructor'] = "('STOP')"
+        bt_emergency_stop.attributes['class'] = "Button"
+        bt_emergency_stop.attributes['editor_tag_type'] = "widget"
+        bt_emergency_stop.attributes['editor_varname'] = "bt_emergency_stop"
+        bt_emergency_stop.style['font-size'] = "30px"
+        bt_emergency_stop.style['-webkit-order'] = "49883792"
+        bt_emergency_stop.style['top'] = "1px"
+        bt_emergency_stop.style['height'] = "80px"
+        bt_emergency_stop.style['order'] = "49883792"
+        bt_emergency_stop.style['width'] = "120px"
+        bt_emergency_stop.style['position'] = "static"
+        bt_emergency_stop.style['overflow'] = "auto"
+        bt_emergency_stop.style['font-weight'] = "bolder"
+        bt_emergency_stop.style['margin'] = "0px"
+        bt_emergency_stop.style['display'] = "block"
+        bt_emergency_stop.style['background-color'] = "#ff1111"
+        fast_commanfs_container.append(bt_emergency_stop,'bt_emergency_stop')
+        bt_command_pause = Button('PAUSE')
+        bt_command_pause.attributes['editor_newclass'] = "False"
+        bt_command_pause.attributes['editor_baseclass'] = "Button"
+        bt_command_pause.attributes['editor_constructor'] = "('PAUSE')"
+        bt_command_pause.attributes['class'] = "Button"
+        bt_command_pause.attributes['editor_tag_type'] = "widget"
+        bt_command_pause.attributes['editor_varname'] = "bt_command_pause"
+        bt_command_pause.style['-webkit-order'] = "116069840"
+        bt_command_pause.style['top'] = "1px"
+        bt_command_pause.style['font-size'] = "30px"
+        bt_command_pause.style['position'] = "static"
+        bt_command_pause.style['overflow'] = "auto"
+        bt_command_pause.style['order'] = "116069840"
+        bt_command_pause.style['margin'] = "0px"
+        bt_command_pause.style['display'] = "block"
+        bt_command_pause.style['background-color'] = "#ffcb1a"
+        fast_commanfs_container.append(bt_command_pause,'bt_command_pause')
+        bt_go = Button('GO')
+        bt_go.attributes['editor_newclass'] = "False"
+        bt_go.attributes['editor_baseclass'] = "Button"
+        bt_go.attributes['editor_constructor'] = "('GO')"
+        bt_go.attributes['class'] = "Button"
+        bt_go.attributes['editor_tag_type'] = "widget"
+        bt_go.attributes['editor_varname'] = "bt_go"
+        bt_go.style['-webkit-order'] = "75031600"
+        bt_go.style['top'] = "1px"
+        bt_go.style['font-size'] = "30px"
+        bt_go.style['position'] = "static"
+        bt_go.style['overflow'] = "auto"
+        bt_go.style['order'] = "75031600"
+        bt_go.style['margin'] = "0px"
+        bt_go.style['display'] = "block"
+        bt_go.style['background-color'] = "#aad500"
+        fast_commanfs_container.append(bt_go,'bt_go')
+        main_container.append(fast_commanfs_container,'fast_commanfs_container')
+        main_container.children['sub_container_commands'].children['bt_command_send'].set_on_click_listener(self.onclick_bt_command_send)
+        main_container.children['fast_commanfs_container'].children['bt_emergency_stop'].set_on_click_listener(self.onclick_bt_emergency_stop)
+        main_container.children['fast_commanfs_container'].children['bt_command_pause'].set_on_click_listener(self.onclick_bt_command_pause)
+        main_container.children['fast_commanfs_container'].children['bt_go'].set_on_click_listener(self.onclick_bt_go)
         
+
+        self.lbl_hotend_value = lbl_hotend_value
+        self.lbl_bed_value = lbl_bed_value
+        self.txt_gcode_input = txt_gcode_input
 
         self.main_container = main_container
         return self.main_container
@@ -528,7 +590,7 @@ class app_3d_printer_monitor(App):
         self.printer.buffered_send(self.txt_gcode_input.get_text(), 20, self.on_gcode_send_done)
 
     def onclick_bt_emergency_stop(self,emitter):
-        pass
+        self.printer.buffered_send('M112', 5, None)
 
     #callback
     def on_temperature_data(self, result):
@@ -544,6 +606,13 @@ class app_3d_printer_monitor(App):
         
     def query_temperatures(self):
         self.printer.buffered_send('M105', 5, self.on_temperature_data)
+
+    def onclick_bt_command_pause(self,emitter):
+        self.printer.buffered_send('M25', 5, None)
+
+    def onclick_bt_go(self,emitter):
+        self.printer.buffered_send('M24', 5, None)
+
 
 
 #Configuration
