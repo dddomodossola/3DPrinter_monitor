@@ -212,10 +212,10 @@ class app_3d_printer_monitor(App):
         lbl_hotend.style['order'] = "0"
         lbl_hotend.style['left'] = "1px"
         sub_container_hotend.append(lbl_hotend,'lbl_hotend')
-        lbl_hotend_value = Label('0�')
+        lbl_hotend_value = Label('0°')
         lbl_hotend_value.attributes['editor_newclass'] = "False"
         lbl_hotend_value.attributes['editor_baseclass'] = "Label"
-        lbl_hotend_value.attributes['editor_constructor'] = "('0�')"
+        lbl_hotend_value.attributes['editor_constructor'] = "('0°')"
         lbl_hotend_value.attributes['class'] = "Label"
         lbl_hotend_value.attributes['editor_tag_type'] = "widget"
         lbl_hotend_value.attributes['editor_varname'] = "lbl_hotend_value"
@@ -347,10 +347,10 @@ class app_3d_printer_monitor(App):
         sub_container_hotbed.style['margin'] = "0px"
         sub_container_hotbed.style['display'] = "flex"
         sub_container_hotbed.style['left'] = "1px"
-        lbl_bed_value = Label('0�')
+        lbl_bed_value = Label('0°')
         lbl_bed_value.attributes['editor_newclass'] = "False"
         lbl_bed_value.attributes['editor_baseclass'] = "Label"
-        lbl_bed_value.attributes['editor_constructor'] = "('0�')"
+        lbl_bed_value.attributes['editor_constructor'] = "('0°')"
         lbl_bed_value.attributes['class'] = "Label"
         lbl_bed_value.attributes['editor_tag_type'] = "widget"
         lbl_bed_value.attributes['editor_varname'] = "lbl_bed_value"
