@@ -7,19 +7,21 @@ from remi import start, App
 import serial
 from threading import Timer
 
+
 class serial_interface():
     def __init__(self, log_list_widget):
         self.log_list_widget = log_list_widget
         self.sock = None
-        self.buffer = [] #list of str
+        self.send_buffer = [] #list of str
         self.connected = False
-        self.busy = False
 
     def reconnect(self, port='/dev/ttyUSB0'):
         self.sock = serial.Serial(port, 250000) # Establish the connection on a specific port
         self.connected = self.sock.isOpen()
+        self.process_next_msg()
 
     def read_buffer(self, timeout=1.0):
+        recv_buffer = []
         self.sock.setTimeout(timeout)
         while True:
             #sleep(.1) # Delay for one tenth of a second
@@ -27,22 +29,32 @@ class serial_interface():
             print(type(buf))
             buf = str(buf)
             print( buf )
-            if len(buf)<1:
+            if len(buf)<1 or buf.startswith('ok'):
                 break
             else:
                 self.log_list_widget.append(gui.ListItem("recv:"+buf))
-                self.buffer.append(buf)
+                recv_buffer.append(buf)
+        return recv_buffer
 
-    def send(self, msg, read_timeout):
-        self.buffer = []
-        self.log_list_widget.append(gui.ListItem(">>>"+msg))
-        try:
-            self.busy = True
-            self.sock.write(msg + '\n')
-            self.read_buffer(read_timeout)
-        except:
-            self.connected = False
-        self.busy = False
+    def buffered_send(self, msg, timeout, listener):
+        self.send_buffer.append({'msg':msg, 'timeout':timeout, 'listener':listener})
+
+    def process_next_msg(self):
+        if len(self.send_buffer) > 0:    
+            answer = None
+            item = self.send_buffer[0]
+            self.send_buffer.remove(item)
+            self.log_list_widget.append(gui.ListItem("send:"+item.msg))
+            try:
+                self.sock.write(item.msg + '\n')
+                answer = self.read_buffer(item.timeout)
+            except:
+                self.connected = False
+            item.listener(answer) #callback
+        Timer(0.5, self.process_next_msg).start()
+        
+
+
 
 #M105 - get extruder temp  - 
 
@@ -290,29 +302,29 @@ class app_3d_printer_monitor(App):
         link_command_help.style['order'] = "74300752"
         link_command_help.style['left'] = "1px"
         sub_container_commands.append(link_command_help,'link_command_help')
-        txt_gcode_input = TextInput(True,'G28')
-        txt_gcode_input.attributes['rows'] = "1"
-        txt_gcode_input.attributes['editor_baseclass'] = "TextInput"
-        txt_gcode_input.attributes['editor_constructor'] = "(True,'G28')"
-        txt_gcode_input.attributes['class'] = "TextInput"
-        txt_gcode_input.attributes['autocomplete'] = "off"
-        txt_gcode_input.attributes['editor_tag_type'] = "widget"
-        txt_gcode_input.attributes['editor_newclass'] = "False"
-        txt_gcode_input.attributes['editor_varname'] = "txt_gcode_input"
-        txt_gcode_input.attributes['placeholder'] = "G28"
-        txt_gcode_input.style['font-size'] = "20px"
-        txt_gcode_input.style['width'] = "350px"
-        txt_gcode_input.style['top'] = "1px"
-        txt_gcode_input.style['height'] = "30px"
-        txt_gcode_input.style['-webkit-order'] = "107654000"
-        txt_gcode_input.style['display'] = "block"
-        txt_gcode_input.style['position'] = "static"
-        txt_gcode_input.style['overflow'] = "auto"
-        txt_gcode_input.style['margin'] = "0px"
-        txt_gcode_input.style['order'] = "1"
-        txt_gcode_input.style['resize'] = "none"
-        txt_gcode_input.style['left'] = "1px"
-        sub_container_commands.append(txt_gcode_input,'txt_gcode_input')
+        self.txt_gcode_input = TextInput(True,'G28')
+        self.txt_gcode_input.attributes['rows'] = "1"
+        self.txt_gcode_input.attributes['editor_baseclass'] = "TextInput"
+        self.txt_gcode_input.attributes['editor_constructor'] = "(True,'G28')"
+        self.txt_gcode_input.attributes['class'] = "TextInput"
+        self.txt_gcode_input.attributes['autocomplete'] = "off"
+        self.txt_gcode_input.attributes['editor_tag_type'] = "widget"
+        self.txt_gcode_input.attributes['editor_newclass'] = "False"
+        self.txt_gcode_input.attributes['editor_varname'] = "txt_gcode_input"
+        self.txt_gcode_input.attributes['placeholder'] = "G28"
+        self.txt_gcode_input.style['font-size'] = "20px"
+        self.txt_gcode_input.style['width'] = "350px"
+        self.txt_gcode_input.style['top'] = "1px"
+        self.txt_gcode_input.style['height'] = "30px"
+        self.txt_gcode_input.style['-webkit-order'] = "107654000"
+        self.txt_gcode_input.style['display'] = "block"
+        self.txt_gcode_input.style['position'] = "static"
+        self.txt_gcode_input.style['overflow'] = "auto"
+        self.txt_gcode_input.style['margin'] = "0px"
+        self.txt_gcode_input.style['order'] = "1"
+        self.txt_gcode_input.style['resize'] = "none"
+        self.txt_gcode_input.style['left'] = "1px"
+        sub_container_commands.append(self.txt_gcode_input,'txt_gcode_input')
         main_container.append(sub_container_commands,'sub_container_commands')
         bt_emergency_stop = Button('STOP')
         bt_emergency_stop.attributes['editor_newclass'] = "False"
@@ -509,22 +521,29 @@ class app_3d_printer_monitor(App):
         self.main_container = main_container
         return self.main_container
     
-    def onclick_bt_command_send(self,emitter):
+    def on_gcode_send_done(self, result):
         pass
+        
+    def onclick_bt_command_send(self,emitter):
+        self.printer.buffered_send(self.txt_gcode_input.get_text(), 20, self.on_gcode_send_done)
 
     def onclick_bt_emergency_stop(self,emitter):
         pass
 
-    def query_temperatures(self):
-        self.printer.send('M105', 5)
-        #ok T:12.4 /0.0 B:13.0 /0.0 T0:12.4 /0.0 @:0 B@:0
-        nozzle = self.printer.buffer[0].split('T:')[1].split('B:')[0]
-        bed = self.printer.buffer[0].split('T:')[1].split('B:')[1].split(' T')[0]
+    #callback
+    def on_temperature_data(self, result):
+        Timer(5, self.query_temperatures).start()
+        if result == None:
+            return
 
+        #ok T:12.4 /0.0 B:13.0 /0.0 T0:12.4 /0.0 @:0 B@:0
+        nozzle = result.split('T:')[1].split('B:')[0]
+        bed = result.split('T:')[1].split('B:')[1].split(' T')[0]
         self.lbl_hotend_value.set_text(nozzle)
         self.lbl_bed_value.set_text(bed)
-        Timer(5, self.query_temperatures).start()
-
+        
+    def query_temperatures(self):
+        self.printer.buffered_send('M105', 5, self.on_temperature_data)
 
 
 #Configuration
