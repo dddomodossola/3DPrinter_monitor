@@ -16,6 +16,7 @@ class serial_interface():
         self.connected = False
 
     def reconnect(self, port='/dev/ttyUSB0'):
+        print('connecting to serial')
         self.sock = serial.Serial(port, 250000) # Establish the connection on a specific port
         self.connected = self.sock.isOpen()
         self.process_next_msg()
@@ -24,6 +25,7 @@ class serial_interface():
         recv_buffer = []
         self.sock.setTimeout(timeout)
         while True:
+            print('reading serial buffer')
             #sleep(.1) # Delay for one tenth of a second
             buf = self.sock.readline() # Read the newest output from the Arduino
             print(type(buf))
@@ -50,15 +52,23 @@ class serial_interface():
             self.log_list_widget.append(gui.ListItem("send:"+item['msg']))
             try:
                 self.sock.write(item['msg'] + '\n')
+                self.sock.flush()
                 answer = self.read_buffer(item['timeout'])
             except:
+                print('exception writing or reading from serial')
                 self.connected = False
+                try:
+                    self.sock.close()
+                except:
+                    print('unable to close serial')
+                self.sock = None
             if not item['listener']==None:
                 try:
                     item['listener'](answer) #callback
                 except:
                     pass
-        Timer(0.5, self.process_next_msg).start()
+        if self.sock.isOpen():
+            Timer(0.5, self.process_next_msg).start()
         
 
 
@@ -583,7 +593,7 @@ class app_3d_printer_monitor(App):
         main_container.children['bt_go'].set_on_click_listener(self.onclick_bt_go)
         main_container.children['bt_command_pause'].set_on_click_listener(self.onclick_bt_command_pause)
         
-
+        self.lbl_connection_status_value = lbl_connection_status_value
         self.lbl_hotend_value = lbl_hotend_value
         self.lbl_bed_value = lbl_bed_value
         self.txt_gcode_input = txt_gcode_input
